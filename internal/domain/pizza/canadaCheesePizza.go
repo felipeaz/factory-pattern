@@ -1,24 +1,40 @@
 package pizza
 
-type CanadaCheesePizza struct {
+import "factory-pattern/internal/app"
+
+const (
+	CanadianCheesePizzaTitle       = "Cheese"
+	CanadianCheesePizzaDescription = "Delicious Canadian Style Cheese Pizza"
+)
+
+type canadianCheesePizza struct {
+	Name        string
+	Description string
 }
 
-func (b *CanadaCheesePizza) Prepare() {
+func NewCanadianCheesePizza() app.Pizza {
+	return &canadianCheesePizza{
+		Name:        CanadianCheesePizzaTitle,
+		Description: CanadianCheesePizzaDescription,
+	}
+}
+
+func (b *canadianCheesePizza) Prepare() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *CanadaCheesePizza) Cut() {
+func (b *canadianCheesePizza) Cut() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *CanadaCheesePizza) Box() {
+func (b *canadianCheesePizza) Box() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *CanadaCheesePizza) IsPrepared() bool {
+func (b *canadianCheesePizza) IsPrepared() bool {
 	//TODO implement me
 	panic("implement me")
 }

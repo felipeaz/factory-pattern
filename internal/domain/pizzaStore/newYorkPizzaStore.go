@@ -1,16 +1,26 @@
 package pizzaStore
 
-import "factory-pattern/internal/app"
+import (
+	"factory-pattern/internal/app"
+	"factory-pattern/internal/domain/factory"
+)
 
-type NyPizzaStore struct {
+type nyPizzaStore struct {
+	PizzaFactory app.PizzaFactory
 }
 
-func (n *NyPizzaStore) Order(pizza string) {
+func NewNYPizzaStore() app.PizzaStore {
+	return &nyPizzaStore{
+		PizzaFactory: factory.NewNYPizzaFactory(),
+	}
+}
+
+func (n *nyPizzaStore) Order(pizza string) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (n *NyPizzaStore) Prepare(order app.Order) *app.Pizza {
+func (n *nyPizzaStore) Prepare(order app.Order) *app.Pizza {
 	//TODO implement me
 	panic("implement me")
 }

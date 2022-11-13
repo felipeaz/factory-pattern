@@ -1,5 +1,5 @@
 package app
 
 type PizzaFactory interface {
-	CreatePizza(pizza string) *Pizza
+	CreatePizza(pizza string) (Pizza, error)
 }
