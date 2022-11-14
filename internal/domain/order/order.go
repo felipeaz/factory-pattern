@@ -1,16 +1,26 @@
 package order
 
-import "time"
+import (
+	"factory-pattern/internal/app"
+	"time"
+)
 
-type Order struct {
+type order struct {
 	Pizza     string    `json:"pizza"`
 	OrderedAt time.Time `json:"orderedAt"`
 }
 
-func (o *Order) GetPizza() string {
+func NewOrder(pizza string) app.Order {
+	return &order{
+		Pizza:     pizza,
+		OrderedAt: time.Now().UTC(),
+	}
+}
+
+func (o *order) GetPizza() string {
 	return o.Pizza
 }
 
-func (o *Order) GetOrderedAtTime() time.Time {
+func (o *order) GetOrderedAtTime() time.Time {
 	return o.OrderedAt
 }
