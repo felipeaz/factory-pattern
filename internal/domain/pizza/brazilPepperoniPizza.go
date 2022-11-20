@@ -40,11 +40,6 @@ func (b *brazilianPepperoni) Box() {
 	panic("implement me")
 }
 
-func (b *brazilianPepperoni) GetTimeToPrepareInSeconds() time.Duration {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (b *brazilianPepperoni) IsPrepared() bool {
 	//TODO implement me
 	panic("implement me")

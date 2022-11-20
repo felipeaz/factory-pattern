@@ -40,11 +40,6 @@ func (b *canadianPepperoni) Box() {
 	panic("implement me")
 }
 
-func (b *canadianPepperoni) GetTimeToPrepareInSeconds() time.Duration {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (b *canadianPepperoni) IsPrepared() bool {
 	//TODO implement me
 	panic("implement me")

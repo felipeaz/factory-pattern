@@ -40,11 +40,6 @@ func (b *newYorkCheesePizza) Box() {
 	panic("implement me")
 }
 
-func (b *newYorkCheesePizza) GetTimeToPrepareInSeconds() time.Duration {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (b *newYorkCheesePizza) IsPrepared() bool {
 	//TODO implement me
 	panic("implement me")
