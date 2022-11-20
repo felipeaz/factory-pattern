@@ -1,6 +1,10 @@
 package pizza
 
-import "factory-pattern/internal/app"
+import (
+	"time"
+
+	"factory-pattern/internal/app"
+)
 
 const (
 	NYPepperoniPizzaTitle       = "Pepperoni"
@@ -8,14 +12,16 @@ const (
 )
 
 type newYorkPepperoniPizza struct {
-	Name        string
-	Description string
+	Name               string
+	Description        string
+	TimeToPrepareInSec time.Duration
 }
 
 func NewNYPepperoniPizza() app.Pizza {
 	return &newYorkPepperoniPizza{
-		Name:        NYPepperoniPizzaTitle,
-		Description: NYPepperoniPizzaDescription,
+		Name:               NYPepperoniPizzaTitle,
+		Description:        NYPepperoniPizzaDescription,
+		TimeToPrepareInSec: time.Second * 8,
 	}
 }
 
@@ -30,6 +36,11 @@ func (b *newYorkPepperoniPizza) Cut() {
 }
 
 func (b *newYorkPepperoniPizza) Box() {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (b *newYorkPepperoniPizza) GetTimeToPrepareInSeconds() time.Duration {
 	//TODO implement me
 	panic("implement me")
 }
