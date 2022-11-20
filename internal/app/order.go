@@ -1,8 +1,6 @@
 package app
 
-import "time"
-
-type Order interface {
-	GetPizza() string
-	GetOrderedAtTime() time.Time
+type OrderManager interface {
+	AddToQueue(pizza Pizza) (positionInQueue int, err error)
+	GetNextInQueue() (pizza Pizza, err error)
 }
