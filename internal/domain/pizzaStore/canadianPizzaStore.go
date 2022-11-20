@@ -5,6 +5,10 @@ import (
 	"factory-pattern/internal/domain/factory"
 )
 
+const (
+	canadianStoreKafkaTopic = "canadian-store"
+)
+
 type canadianPizzaStore struct {
 	PizzaFactory app.PizzaFactory
 }

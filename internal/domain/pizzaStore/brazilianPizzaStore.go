@@ -1,17 +1,25 @@
 package pizzaStore
 
 import (
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+
 	"factory-pattern/internal/app"
 	"factory-pattern/internal/domain/factory"
 )
 
+const (
+	brazilianStoreKafkaTopic = "brazilian-store"
+)
+
 type brazilianPizzaStore struct {
 	PizzaFactory app.PizzaFactory
+	QueueManager *kafka.Producer
 }
 
 func NewBrazilianPizzaStore() app.PizzaStore {
 	return &brazilianPizzaStore{
 		PizzaFactory: factory.NewBrazilianPizzaFactory(),
+		QueueManager: buildQueueManager(),
 	}
 }
 
