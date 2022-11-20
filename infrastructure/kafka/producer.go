@@ -1,9 +1,11 @@
 package kafka
 
 import (
-	"factory-pattern/infrastructure/kafka/constants"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"log"
+
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+
+	"factory-pattern/infrastructure/kafka/constants"
 )
 
 // ProducerArgs arguments used in a Producer initialization

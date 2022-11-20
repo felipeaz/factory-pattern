@@ -1,8 +1,9 @@
 package order
 
 import (
-	"factory-pattern/internal/app"
 	"time"
+
+	"factory-pattern/internal/app"
 )
 
 type order struct {
