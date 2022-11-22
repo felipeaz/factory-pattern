@@ -16,6 +16,11 @@ type nyPizzaStore struct {
 func NewNYPizzaStore() app.PizzaStore {
 	return &nyPizzaStore{
 		PizzaFactory: factory.NewNYPizzaFactory(),
+		OrderManager: order.NewManager(
+			order.ManagerArgs{
+				KafkaTopic: newYorkStoreKafkaTopic,
+			},
+		),
 	}
 }
 

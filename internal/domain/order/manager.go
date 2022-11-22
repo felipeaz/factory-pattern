@@ -1,16 +1,22 @@
 package order
 
 import (
+	"factory-pattern/infrastructure/kafka"
 	"factory-pattern/internal/app"
 )
 
-type orderManager struct {
-	topic string
+type ManagerArgs struct {
+	KafkaTopic  string
+	KafkaConfig kafka.ConfigArgs
 }
 
-func NewOrderManager(kafkaTopic string) app.OrderManager {
+type orderManager struct {
+	KafkaHandler kafka.Kafka
+}
+
+func NewManager(args ManagerArgs) app.OrderManager {
 	return &orderManager{
-		topic: kafkaTopic,
+		KafkaHandler: kafka.NewKafka(args.KafkaConfig),
 	}
 }
 
