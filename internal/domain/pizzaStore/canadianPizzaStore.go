@@ -3,6 +3,7 @@ package pizzaStore
 import (
 	"factory-pattern/internal/app"
 	"factory-pattern/internal/domain/factory"
+	"factory-pattern/internal/domain/order"
 )
 
 const (
@@ -11,6 +12,7 @@ const (
 
 type canadianPizzaStore struct {
 	PizzaFactory app.PizzaFactory
+	OrderManager app.OrderManager
 }
 
 func NewCanadianPizzaStore() app.PizzaStore {
@@ -24,12 +26,12 @@ func NewCanadianPizzaStore() app.PizzaStore {
 	}
 }
 
-func (c *canadianPizzaStore) Order(pizza string) {
+func (c *canadianPizzaStore) Order(pizza string) (int, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *canadianPizzaStore) Prepare(order app.Order) *app.Pizza {
+func (c *canadianPizzaStore) Prepare(order app.OrderManager) (*app.Pizza, error) {
 	//TODO implement me
 	panic("implement me")
 }
