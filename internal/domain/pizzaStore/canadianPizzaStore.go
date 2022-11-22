@@ -26,12 +26,12 @@ func NewCanadianPizzaStore() app.PizzaStore {
 	}
 }
 
-func (c *canadianPizzaStore) Order(pizza string) (int, error) {
+func (c *canadianPizzaStore) Order(pizza string) (app.Order, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *canadianPizzaStore) Prepare(order app.OrderManager) (*app.Pizza, error) {
+func (c *canadianPizzaStore) Prepare() (app.Pizza, error) {
 	//TODO implement me
 	panic("implement me")
 }

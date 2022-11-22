@@ -27,22 +27,17 @@ func NewBrazilianPizzaStore() app.PizzaStore {
 	}
 }
 
-func (b *brazilianPizzaStore) Order(pizza string) (int, error) {
-	orderedPizza, err := b.PizzaFactory.CreatePizza(pizza)
+func (b *brazilianPizzaStore) Order(pizza string) (app.Order, error) {
+	orderObj, err := b.OrderManager.CreateOrder(pizza)
 	if err != nil {
-		return 0, errors.WithStack("error calling CreatePizza", err)
+		return nil, errors.WithStack("error calling AddToQueue", err)
 	}
 
-	positionInQueue, err := b.OrderManager.AddToQueue(orderedPizza)
-	if err != nil {
-		return 0, errors.WithStack("error calling AddToQueue", err)
-	}
-
-	return positionInQueue, nil
+	return orderObj, nil
 }
 
-func (b *brazilianPizzaStore) Prepare(order app.OrderManager) (*app.Pizza, error) {
-	pizza, err := b.OrderManager.GetNextInQueue()
+func (b *brazilianPizzaStore) Prepare() (app.Pizza, error) {
+	pizza, err := b.OrderManager.GetNextOrderInQueue()
 	if err != nil {
 		return nil, errors.WithStack("error calling GetNextInQueue", err)
 	}
