@@ -1,13 +1,15 @@
 package pizzaStore
 
 import (
+	"factory-pattern/infrastructure/kafka"
 	"factory-pattern/internal/app"
 	"factory-pattern/internal/domain/factory"
 	"factory-pattern/internal/domain/order"
 )
 
 const (
-	canadianStoreKafkaTopic = "canadian-store"
+	canadianStoreKafkaTopic      = "canadian-store"
+	canadianStoreConsumerGroupId = "ca-consumer"
 )
 
 type canadianPizzaStore struct {
@@ -20,13 +22,22 @@ func NewCanadianPizzaStore() app.PizzaStore {
 		PizzaFactory: factory.NewCanadianPizzaFactory(),
 		OrderManager: order.NewManager(
 			order.ManagerArgs{
-				KafkaTopic: canadianStoreKafkaTopic,
+				KafkaConfig: kafka.ConfigArgs{
+					Topic:           canadianStoreKafkaTopic,
+					BootstrapServer: "",
+					ClientId:        "",
+					TotalPartitions: 0,
+					ConsumerConfig: kafka.ConsumerConfigArgs{
+						GroupId:         canadianStoreConsumerGroupId,
+						AutoOffsetReset: kafka.AutoOffsetResetConfig,
+					},
+				},
 			},
 		),
 	}
 }
 
-func (c *canadianPizzaStore) Order(pizza string) (app.Order, error) {
+func (c *canadianPizzaStore) Order(pizza string) error {
 	//TODO implement me
 	panic("implement me")
 }

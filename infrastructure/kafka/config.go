@@ -2,10 +2,21 @@ package kafka
 
 import "github.com/confluentinc/confluent-kafka-go/kafka"
 
+const (
+	AutoOffsetResetConfig = "smallest"
+)
+
 type ConfigArgs struct {
+	Topic           string
 	BootstrapServer string
 	ClientId        string
 	TotalPartitions int
+	ConsumerConfig  ConsumerConfigArgs
+}
+
+type ConsumerConfigArgs struct {
+	GroupId         string
+	AutoOffsetReset string
 }
 
 type Config interface {

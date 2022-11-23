@@ -1,6 +1,7 @@
 package pizzaStore
 
 import (
+	"factory-pattern/infrastructure/kafka"
 	"factory-pattern/internal/app"
 	"factory-pattern/internal/domain/factory"
 	"factory-pattern/internal/domain/order"
@@ -9,6 +10,7 @@ import (
 
 const (
 	brazilianStoreKafkaTopic = "brazilian-store"
+	brazilianConsumerGroupId = "br-consumer"
 )
 
 type brazilianPizzaStore struct {
@@ -21,19 +23,28 @@ func NewBrazilianPizzaStore() app.PizzaStore {
 		PizzaFactory: factory.NewBrazilianPizzaFactory(),
 		OrderManager: order.NewManager(
 			order.ManagerArgs{
-				KafkaTopic: brazilianStoreKafkaTopic,
+				KafkaConfig: kafka.ConfigArgs{
+					Topic:           brazilianStoreKafkaTopic,
+					BootstrapServer: "",
+					ClientId:        "",
+					TotalPartitions: 0,
+					ConsumerConfig: kafka.ConsumerConfigArgs{
+						GroupId:         brazilianConsumerGroupId,
+						AutoOffsetReset: kafka.AutoOffsetResetConfig,
+					},
+				},
 			},
 		),
 	}
 }
 
-func (b *brazilianPizzaStore) Order(pizza string) (app.Order, error) {
-	orderObj, err := b.OrderManager.CreateOrder(pizza)
+func (b *brazilianPizzaStore) Order(pizza string) error {
+	err := b.OrderManager.CreateOrder(pizza)
 	if err != nil {
-		return nil, errors.WithStack("error calling AddToQueue", err)
+		return errors.WithStack("error calling AddToQueue", err)
 	}
 
-	return orderObj, nil
+	return nil
 }
 
 func (b *brazilianPizzaStore) Prepare() (app.Pizza, error) {
@@ -41,6 +52,8 @@ func (b *brazilianPizzaStore) Prepare() (app.Pizza, error) {
 	if err != nil {
 		return nil, errors.WithStack("error calling GetNextInQueue", err)
 	}
+
 	pizza.Prepare()
+
 	return nil, nil
 }
