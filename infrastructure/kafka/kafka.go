@@ -12,24 +12,16 @@ type Kafka interface {
 }
 
 func NewKafka(args ConfigArgs) Kafka {
-	kafkaConfig := NewBaseConfig(args)
+	kafkaConfig := NewKafkaConfig(args)
 	return &kafkaHandler{
-		KafkaConfig: args,
-		Producer: NewProducer(
-			ProducerArgs{
-				ConfigMap: kafkaConfig.GetConfigMap(),
-			},
-		),
-		Consumer: NewConsumer(
-			ConsumerArgs{
-				ConfigMap: kafkaConfig.GetConfigMap(),
-			},
-		),
+		KafkaConfig: kafkaConfig,
+		Producer:    NewProducer(kafkaConfig.GetProducerConfigMap()),
+		Consumer:    NewConsumer(kafkaConfig.GetConsumerConfigMap()),
 	}
 }
 
 type kafkaHandler struct {
-	KafkaConfig ConfigArgs
+	KafkaConfig Config
 	Producer    *kafka.Producer
 	Consumer    *kafka.Consumer
 }
@@ -41,7 +33,7 @@ func (h *kafkaHandler) Produce(msgInBytes []byte) (kafka.Event, error) {
 	err := h.Producer.Produce(
 		&kafka.Message{
 			TopicPartition: kafka.TopicPartition{
-				Topic:     pkg.ToStringPointer(h.KafkaConfig.Topic),
+				Topic:     pkg.ToStringPointer(h.KafkaConfig.GetTopic()),
 				Partition: kafka.PartitionAny,
 			},
 			Value: msgInBytes,

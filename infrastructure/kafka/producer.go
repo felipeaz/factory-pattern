@@ -8,12 +8,8 @@ import (
 	"factory-pattern/infrastructure/kafka/constants"
 )
 
-type ProducerArgs struct {
-	ConfigMap *kafka.ConfigMap
-}
-
-func NewProducer(args ProducerArgs) *kafka.Producer {
-	producer, err := kafka.NewProducer(args.ConfigMap)
+func NewProducer(configMap *kafka.ConfigMap) *kafka.Producer {
+	producer, err := kafka.NewProducer(configMap)
 	if err != nil {
 		log.Fatal(constants.ErrorInitializingProducer, err)
 	}

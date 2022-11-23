@@ -7,17 +7,15 @@ import (
 	"factory-pattern/internal/errors"
 )
 
-type ManagerArgs struct {
-	KafkaConfig kafka.ConfigArgs
-}
-
 type orderManager struct {
-	KafkaHandler kafka.Kafka
+	kafkaHandler kafka.Kafka
+	topic        string
+	groupId      string
 }
 
-func NewManager(args ManagerArgs) app.OrderManager {
+func NewManager(kafkaHandler kafka.Kafka) app.OrderManager {
 	return &orderManager{
-		KafkaHandler: kafka.NewKafka(args.KafkaConfig),
+		kafkaHandler: kafkaHandler,
 	}
 }
 
@@ -36,7 +34,7 @@ func (o *orderManager) CreateOrder(pizza string) (err error) {
 }
 
 func (o *orderManager) placeOrderInQueue(order []byte) error {
-	kafkaEvent, err := o.KafkaHandler.Produce(order)
+	kafkaEvent, err := o.kafkaHandler.Produce(order)
 	if err != nil {
 		return errors.WithStack("error calling producer", err)
 	}

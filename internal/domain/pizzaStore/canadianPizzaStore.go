@@ -1,15 +1,9 @@
 package pizzaStore
 
 import (
-	"factory-pattern/infrastructure/kafka"
 	"factory-pattern/internal/app"
 	"factory-pattern/internal/domain/factory"
 	"factory-pattern/internal/domain/order"
-)
-
-const (
-	canadianStoreKafkaTopic      = "canadian-store"
-	canadianStoreConsumerGroupId = "ca-consumer"
 )
 
 type canadianPizzaStore struct {
@@ -21,18 +15,7 @@ func NewCanadianPizzaStore() app.PizzaStore {
 	return &canadianPizzaStore{
 		PizzaFactory: factory.NewCanadianPizzaFactory(),
 		OrderManager: order.NewManager(
-			order.ManagerArgs{
-				KafkaConfig: kafka.ConfigArgs{
-					Topic:           canadianStoreKafkaTopic,
-					BootstrapServer: "",
-					ClientId:        "",
-					TotalPartitions: 0,
-					ConsumerConfig: kafka.ConsumerConfigArgs{
-						GroupId:         canadianStoreConsumerGroupId,
-						AutoOffsetReset: kafka.AutoOffsetResetConfig,
-					},
-				},
-			},
+			factory.KafkaHandlerFactory(factory.CanadianStore),
 		),
 	}
 }
