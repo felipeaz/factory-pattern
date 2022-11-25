@@ -25,22 +25,25 @@ func NewBrazilianCheesePizza() app.Pizza {
 	}
 }
 
-func (b *brazilianCheesePizza) Prepare() {
+func (p *brazilianCheesePizza) Prepare() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *brazilianCheesePizza) Cut() {
+func (p *brazilianCheesePizza) Cut() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *brazilianCheesePizza) Box() {
+func (p *brazilianCheesePizza) Box() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *brazilianCheesePizza) IsPrepared() bool {
-	//TODO implement me
-	panic("implement me")
+func (p *brazilianCheesePizza) GetName() string {
+	return p.Name
+}
+
+func (p *brazilianCheesePizza) GetDescription() string {
+	return p.Description
 }

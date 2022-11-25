@@ -1,6 +1,8 @@
 package pizzaStore
 
 import (
+	"log"
+
 	"factory-pattern/internal/app"
 	"factory-pattern/internal/domain/factory"
 	"factory-pattern/internal/domain/order"
@@ -21,22 +23,37 @@ func NewBrazilianPizzaStore() app.PizzaStore {
 	}
 }
 
+func (b *brazilianPizzaStore) StartWork() {
+
+}
+
 func (b *brazilianPizzaStore) Order(pizza string) error {
 	err := b.OrderManager.CreateOrder(pizza)
 	if err != nil {
-		return errors.WithStack("error calling AddToQueue", err)
+		return errors.WithStack("error calling CreateOrder", err)
 	}
 
 	return nil
 }
 
-func (b *brazilianPizzaStore) Prepare() (app.Pizza, error) {
+func (b *brazilianPizzaStore) prepare() (app.Pizza, error) {
+	doneCh := make(chan bool)
 	pizza, err := b.OrderManager.GetNextOrderInQueue()
 	if err != nil {
 		return nil, errors.WithStack("error calling GetNextInQueue", err)
 	}
 
-	pizza.Prepare()
+	doneCh <- pizza.Prepare()
+	select {
+	case <-doneCh:
+		log.Printf("%s Pizza is ready for delivery\n", pizza.GetName())
+	default:
+		log.Printf("Preparing a %s Pizza\n", pizza.GetName())
+	}
 
-	return nil, nil
+	return pizza, nil
+}
+func (b *brazilianPizzaStore) delivery(pizza app.Pizza) bool {
+	log.Printf("A %s Pizza is out for delivery", pizza.GetDescription())
+	return true
 }

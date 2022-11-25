@@ -20,12 +20,20 @@ func NewCanadianPizzaStore() app.PizzaStore {
 	}
 }
 
+func (c *canadianPizzaStore) StartWork() {
+
+}
+
 func (c *canadianPizzaStore) Order(pizza string) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *canadianPizzaStore) Prepare() (app.Pizza, error) {
+func (c *canadianPizzaStore) prepare() (app.Pizza, error) {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (c *canadianPizzaStore) delivery(pizza app.Pizza) bool {
+	return true
 }

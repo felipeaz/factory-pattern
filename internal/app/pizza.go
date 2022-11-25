@@ -1,8 +1,9 @@
 package app
 
 type Pizza interface {
-	Prepare()
+	Prepare() (done bool)
 	Cut()
 	Box()
-	IsPrepared() bool
+	GetName() string
+	GetDescription() string
 }

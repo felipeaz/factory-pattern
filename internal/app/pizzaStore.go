@@ -1,6 +1,6 @@
 package app
 
 type PizzaStore interface {
+	StartWork()
 	Order(pizza string) (err error)
-	Prepare() (pizza Pizza, err error)
 }
