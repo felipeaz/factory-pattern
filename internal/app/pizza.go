@@ -1,7 +1,7 @@
 package app
 
 type Pizza interface {
-	Prepare() (done bool)
+	Prepare() chan bool
 	Cut()
 	Box()
 	GetName() string

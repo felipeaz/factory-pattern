@@ -25,7 +25,7 @@ func NewBrazilianCheesePizza() app.Pizza {
 	}
 }
 
-func (p *brazilianCheesePizza) Prepare() bool {
+func (p *brazilianCheesePizza) Prepare() chan bool {
 	//TODO implement me
 	panic("implement me")
 }

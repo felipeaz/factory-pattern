@@ -1,14 +1,17 @@
 package kafka
 
 import (
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"log"
+
+	"factory-pattern/infrastructure/kafka/event"
 	"factory-pattern/internal/errors"
 	"factory-pattern/internal/pkg"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 type Kafka interface {
 	Produce(msgInBytes []byte) (kafka.Event, error)
-	Consume()
+	Consume(ordersEventCh chan<- *kafka.Message, done <-chan bool)
 }
 
 func NewKafka(args ConfigArgs) Kafka {
@@ -16,7 +19,7 @@ func NewKafka(args ConfigArgs) Kafka {
 	return &kafkaHandler{
 		KafkaConfig: kafkaConfig,
 		Producer:    NewProducer(kafkaConfig.GetProducerConfigMap()),
-		Consumer:    NewConsumer(kafkaConfig.GetConsumerConfigMap()),
+		Consumer:    NewConsumer(kafkaConfig.GetConsumerConfigMap(), kafkaConfig.GetTopic()),
 	}
 }
 
@@ -27,8 +30,8 @@ type kafkaHandler struct {
 }
 
 func (h *kafkaHandler) Produce(msgInBytes []byte) (kafka.Event, error) {
-	deliveryChan := make(chan kafka.Event)
-	defer close(deliveryChan)
+	produceChan := make(chan kafka.Event)
+	defer close(produceChan)
 
 	err := h.Producer.Produce(
 		&kafka.Message{
@@ -38,17 +41,31 @@ func (h *kafkaHandler) Produce(msgInBytes []byte) (kafka.Event, error) {
 			},
 			Value: msgInBytes,
 		},
-		deliveryChan,
+		produceChan,
 	)
 
 	if err != nil {
 		return nil, errors.WithStack("failed to produce message", err)
 	}
 
-	return <-deliveryChan, nil
+	return <-produceChan, nil
 }
 
-func (h *kafkaHandler) Consume() {
-	//TODO implement me
-	panic("implement me")
+func (h *kafkaHandler) Consume(ordersEventCh chan<- *kafka.Message, done <-chan bool) {
+	defer h.Consumer.Close()
+
+	select {
+	case <-done:
+		log.Println("Consumer stopped pooling")
+		return
+	default:
+		consumerEvent := h.Consumer.Poll(100)
+
+		msg, err := event.HandleEvent(consumerEvent)
+		if err != nil {
+			return
+		}
+
+		ordersEventCh <- msg
+	}
 }

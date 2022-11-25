@@ -1,6 +1,10 @@
 package order
 
 import (
+	"log"
+
+	kafkalib "github.com/confluentinc/confluent-kafka-go/kafka"
+
 	"factory-pattern/infrastructure/kafka"
 	"factory-pattern/infrastructure/kafka/event"
 	"factory-pattern/internal/app"
@@ -39,10 +43,31 @@ func (o *orderManager) placeOrderInQueue(order []byte) error {
 		return errors.WithStack("error calling producer", err)
 	}
 
-	return event.HandleEvent(kafkaEvent)
+	msg, err := event.HandleEvent(kafkaEvent)
+	if err != nil {
+		return errors.WithStack("error producing message", err)
+	}
+
+	log.Println("Order placed at:", msg.Timestamp)
+
+	return nil
 }
 
-func (o *orderManager) GetNextOrderInQueue() (pizza app.Pizza, err error) {
-	//TODO implement me
-	panic("implement me")
+func (o *orderManager) GetNextOrderInQueue(queue chan<- string, done <-chan bool) {
+	orderMessageChan := make(chan *kafkalib.Message)
+	defer close(orderMessageChan)
+
+	go o.kafkaHandler.Consume(orderMessageChan, done)
+
+	select {
+	case <-done:
+		log.Println("stopped GetNextOrderInQueue")
+		return
+	case msg := <-orderMessageChan:
+		orderDto, err := NewOrderDtoFromBytes(msg.Value)
+		if err != nil {
+			return
+		}
+		queue <- orderDto.Pizza
+	}
 }

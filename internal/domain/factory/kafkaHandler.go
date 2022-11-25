@@ -38,8 +38,8 @@ func buildKafkaHandler(topic, groupId string) kafka.Kafka {
 	return kafka.NewKafka(
 		kafka.ConfigArgs{
 			Topic:           topic,
-			BootstrapServer: "",
-			ClientId:        "",
+			BootstrapServer: "localhost:9092",
+			ClientId:        "localhost",
 			TotalPartitions: 0,
 			ProducerConfig: kafka.ProducerConfigArgs{
 				Acknowledge: kafka.AcknowledgeConfig,

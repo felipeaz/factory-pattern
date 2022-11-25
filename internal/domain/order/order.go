@@ -2,20 +2,16 @@ package order
 
 import (
 	"encoding/json"
+	"log"
+	"time"
+
+	uuid "src/github.com/satori/go.uuid"
+
 	"factory-pattern/internal/app"
 	"factory-pattern/internal/errors"
-	"log"
-	uuid "src/github.com/satori/go.uuid"
-	"time"
 )
 
-type OrderDto struct {
-	Id        string `json:"id"`
-	Pizza     string `json:"pizza"`
-	OrderedAt string `json:"orderedAt"`
-}
-
-func NewOrder(pizza string) app.Order {
+func NewOrderFromPizzaName(pizza string) app.Order {
 	return &order{
 		id:        newUUID(),
 		pizza:     pizza,
@@ -24,7 +20,7 @@ func NewOrder(pizza string) app.Order {
 }
 
 func NewOrderInBytes(pizza string) ([]byte, error) {
-	return NewOrder(pizza).ToBytes()
+	return NewOrderFromPizzaName(pizza).ToBytes()
 }
 
 type order struct {

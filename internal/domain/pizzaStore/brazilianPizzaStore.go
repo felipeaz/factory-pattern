@@ -24,7 +24,33 @@ func NewBrazilianPizzaStore() app.PizzaStore {
 }
 
 func (b *brazilianPizzaStore) StartWork() {
+	done := make(chan bool)
+	defer close(done)
 
+	pizzaQueueChan := make(chan string)
+	defer close(pizzaQueueChan)
+
+	go b.OrderManager.GetNextOrderInQueue(pizzaQueueChan, done)
+
+	for orderedPizza := range pizzaQueueChan {
+		pizzaInProduction, err := b.PizzaFactory.CreatePizza(orderedPizza)
+		if err != nil {
+			done <- true
+		}
+
+		select {
+		case <-pizzaInProduction.Prepare():
+			log.Printf("%s Pizza is ready for delivery", pizzaInProduction.GetName())
+
+			pizzaInProduction.Cut()
+			pizzaInProduction.Box()
+			delivery(pizzaInProduction)
+
+			continue
+		default:
+			log.Printf("Preparing a %s Pizza", pizzaInProduction.GetName())
+		}
+	}
 }
 
 func (b *brazilianPizzaStore) Order(pizza string) error {
@@ -32,28 +58,9 @@ func (b *brazilianPizzaStore) Order(pizza string) error {
 	if err != nil {
 		return errors.WithStack("error calling CreateOrder", err)
 	}
-
 	return nil
 }
 
-func (b *brazilianPizzaStore) prepare() (app.Pizza, error) {
-	doneCh := make(chan bool)
-	pizza, err := b.OrderManager.GetNextOrderInQueue()
-	if err != nil {
-		return nil, errors.WithStack("error calling GetNextInQueue", err)
-	}
-
-	doneCh <- pizza.Prepare()
-	select {
-	case <-doneCh:
-		log.Printf("%s Pizza is ready for delivery\n", pizza.GetName())
-	default:
-		log.Printf("Preparing a %s Pizza\n", pizza.GetName())
-	}
-
-	return pizza, nil
-}
-func (b *brazilianPizzaStore) delivery(pizza app.Pizza) bool {
+func delivery(pizza app.Pizza) {
 	log.Printf("A %s Pizza is out for delivery", pizza.GetDescription())
-	return true
 }
