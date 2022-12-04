@@ -4,36 +4,33 @@ import (
 	"factory-pattern/internal/app"
 	"factory-pattern/internal/domain/factory"
 	"factory-pattern/internal/domain/order"
+	"factory-pattern/internal/errors"
 )
 
 type nyPizzaStore struct {
-	PizzaFactory app.PizzaFactory
-	OrderManager app.OrderManager
+	pizzaFactory app.PizzaFactory
+	orderManager app.OrderManager
+	worker       worker
 }
 
 func NewNYPizzaStore() app.PizzaStore {
 	return &nyPizzaStore{
-		PizzaFactory: factory.NewNYPizzaFactory(),
-		OrderManager: order.NewManager(
+		pizzaFactory: factory.NewNYPizzaFactory(),
+		orderManager: order.NewManager(
 			factory.KafkaHandlerFactory(factory.NewYorkStore),
 		),
+		worker: initializeWorker(),
 	}
 }
 
 func (n *nyPizzaStore) StartWork() {
-
+	n.worker.startWork(n.orderManager, n.pizzaFactory)
 }
 
 func (n *nyPizzaStore) Order(pizza string) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (n *nyPizzaStore) prepare() (app.Pizza, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (n *nyPizzaStore) delivery(pizza app.Pizza) bool {
-	return true
+	err := n.orderManager.CreateOrder(pizza)
+	if err != nil {
+		return errors.WithStack("error calling CreateOrder", err)
+	}
+	return nil
 }

@@ -1,9 +1,12 @@
 package pizza
 
 import (
+	"fmt"
+	"log"
 	"time"
 
 	"factory-pattern/internal/app"
+	"factory-pattern/internal/domain/pizza/constants"
 )
 
 const (
@@ -25,19 +28,23 @@ func NewBrazilianPepperoniPizza() app.Pizza {
 	}
 }
 
-func (p *brazilianPepperoni) Prepare() chan bool {
-	//TODO implement me
-	panic("implement me")
+func (p *brazilianPepperoni) Prepare(pizzaIsPrepared chan bool) {
+	prepareTime := time.After(p.TimeToPrepareInSec)
+	select {
+	case <-prepareTime:
+		pizzaIsPrepared <- true
+		return
+	default:
+		log.Println(fmt.Sprintf(constants.PreparingPizzaText, p.Description))
+	}
 }
 
 func (p *brazilianPepperoni) Cut() {
-	//TODO implement me
-	panic("implement me")
+	log.Println(fmt.Sprintf(constants.SlicingPizza, p.Name))
 }
 
 func (p *brazilianPepperoni) Box() {
-	//TODO implement me
-	panic("implement me")
+	log.Println(fmt.Sprintf(constants.BoxingPizza, p.Name))
 }
 
 func (p *brazilianPepperoni) GetName() string {
