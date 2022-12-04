@@ -1,10 +1,11 @@
 package event
 
 import (
-	"factory-pattern/internal/errors"
 	"log"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+
+	"factory-pattern/internal/errors"
 )
 
 func HandleEvent(event kafka.Event) (*kafka.Message, error) {
