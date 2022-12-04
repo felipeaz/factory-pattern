@@ -2,10 +2,9 @@ package order
 
 import (
 	"encoding/json"
-	"log"
 	"time"
 
-	uuid "src/github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 
 	"factory-pattern/internal/app"
 	"factory-pattern/internal/errors"
@@ -13,7 +12,7 @@ import (
 
 func NewOrderFromPizzaName(pizza string) app.Order {
 	return &order{
-		id:        newUUID(),
+		id:        uuid.NewV4(),
 		pizza:     pizza,
 		orderedAt: time.Now().UTC(),
 	}
@@ -58,11 +57,4 @@ func (o *order) getOrderDTO() OrderDto {
 		Pizza:     o.GetPizza(),
 		OrderedAt: o.GetOrderedTime(),
 	}
-}
-func newUUID() uuid.UUID {
-	orderUUID, err := uuid.NewV4()
-	if err != nil {
-		log.Fatal("failed to generate UUID V4")
-	}
-	return orderUUID
 }

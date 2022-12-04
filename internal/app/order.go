@@ -1,7 +1,7 @@
 package app
 
 import (
-	uuid "src/github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 type Order interface {
